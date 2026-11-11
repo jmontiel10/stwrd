@@ -12,6 +12,7 @@ This repo is the marketing site plus a fully interactive app demo. No build step
 | --- | --- |
 | `index.html` / `site.css` / `site.js` | Landing page: hero with a live phone demo, how it works, features, 529 calculator, safety, pricing, testimonials, roadmap, team, waitlist |
 | `demo.html` / `demo.css` / `demo.js` | The app demo. Works standalone and embedded in the landing page |
+| `icons.js` | Solid icon set (Phosphor Icons, fill weight, MIT) used across the demo |
 | `assets/` | New logo (full lockup, S mark, wordmark) on transparent background, plus favicon |
 
 ## The demo

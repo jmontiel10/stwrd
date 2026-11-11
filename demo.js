@@ -2,33 +2,21 @@
 (() => {
 'use strict';
 
-/* ---------- icons ---------- */
-const P = {
-  home:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>',
-  search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
-  cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/>',
-  cap:'<path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/>',
-  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
-  bell:'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/>',
-  plus:'<path d="M12 5v14M5 12h14"/>',
-  brief:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/>',
-  spark:'<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/>',
-  gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
-  filter:'<path d="M3 5h18M6 12h12M10 19h4"/>',
-  send:'<path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/>',
-  check:'<path d="M20 6 9 17l-5-5"/>'
-};
-const ico = n => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${P[n]}</svg>`;
+/* ---------- icons (Phosphor fill, see icons.js) ---------- */
+const ICO = {home:'house',search:'magnifying-glass',cal:'calendar-blank',cap:'graduation-cap',user:'user-circle',bell:'bell',plus:'plus',brief:'briefcase',spark:'sparkle',gear:'gear-six',filter:'funnel-simple',send:'paper-plane-tilt',check:'check'};
+const si = window.si;
+const ico = n => si(ICO[n] || n);
+const stars = (n, total = 5) => `<span class="stars-row">${Array.from({length: total}, (_, i) => si('star', i < n ? '' : 'dim')).join('')}</span>`;
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const $ = (n, d = 2) => '$' + Number(n).toLocaleString('en-US', {minimumFractionDigits: d, maximumFractionDigits: d});
 const $0 = n => $(n, 0);
 
 /* ---------- sample data ---------- */
 const TYPES = {
-  lawn:{e:'🌿',n:'Lawn Mowing',s:'Lawn'}, snow:{e:'❄️',n:'Snow Removal',s:'Snow'},
-  car:{e:'🚗',n:'Car Washing',s:'Car Wash'}, yard:{e:'🍂',n:'Yard Work',s:'Yard'},
-  clean:{e:'🧹',n:'Cleaning',s:'Cleaning'}, pet:{e:'🐕',n:'Pet Care',s:'Pets'},
-  other:{e:'🛠️',n:'Other',s:'Other'}
+  lawn:{e:'plant',n:'Lawn Mowing',s:'Lawn'}, snow:{e:'snowflake',n:'Snow Removal',s:'Snow'},
+  car:{e:'car',n:'Car Washing',s:'Car Wash'}, yard:{e:'leaf',n:'Yard Work',s:'Yard'},
+  clean:{e:'broom',n:'Cleaning',s:'Cleaning'}, pet:{e:'dog',n:'Pet Care',s:'Pets'},
+  other:{e:'wrench',n:'Other',s:'Other'}
 };
 const COLORS = ['#F3EC6C','#7cb7ff','#5be3a0','#ffb38a','#d4a8ff','#ff9fb6'];
 const initials = n => n.split(/\s+/).map(p => p[0]).join('').slice(0,2).toUpperCase();
@@ -85,10 +73,10 @@ const initState = () => ({
     {id:104,type:'snow',title:'Snow removal',pay:55,status:'paid',worker:'joel',when:'Oct 30',rated:true}
   ],
   activity:[
-    {e:'🙋',t:'<b>Aiden B.</b> applied to Leaf cleanup',w:'12m ago'},
-    {e:'✅',t:'Car wash completed by <b>Owen B.</b>',w:'2d ago'},
-    {e:'🙋',t:'<b>Owen B.</b> applied to Leaf cleanup',w:'3d ago'},
-    {e:'⏰',t:'Your gutter cleaning listing expired',w:'5d ago',repost:true}
+    {e:'user-plus',t:'<b>Aiden B.</b> applied to Leaf cleanup',w:'12m ago'},
+    {e:'check-circle',t:'Car wash completed by <b>Owen B.</b>',w:'2d ago'},
+    {e:'user-plus',t:'<b>Owen B.</b> applied to Leaf cleanup',w:'3d ago'},
+    {e:'clock-countdown',t:'Your gutter cleaning listing expired',w:'5d ago',repost:true}
   ],
   notes:{student:[
     {t:'Sandra K. confirmed Saturday’s lawn mowing.',w:'1h'},
@@ -120,15 +108,15 @@ const fundPctDone = () => Math.min(100, S.fund / S.fundGoal * 100);
 const avgMonthly = () => S.months.reduce((a, m) => a + m[1], 0) / S.months.length;
 const projected = years => { const c = avgMonthly() * S.pct / 100 * 12, r = 0.05; return S.fund * Math.pow(1 + r, years) + c * ((Math.pow(1 + r, years) - 1) / r); };
 const earnedBadges = () => [
-  {e:'🎉',n:'First Job',d:'Complete 1 job',ok:S.jobsDone >= 1},
-  {e:'🔟',n:'10 Jobs',d:'Complete 10 jobs',ok:S.jobsDone >= 10},
-  {e:'🏅',n:'25 Jobs',d:'Complete 25 jobs',ok:S.jobsDone >= 25},
-  {e:'⏱️',n:'100 Hours',d:'Log 100 service hrs',ok:S.hours >= 100},
-  {e:'⭐',n:'Top Rated',d:'4.8+ over 20 reviews',ok:true},
-  {e:'❄️',n:'Snow Hero',d:'5 snow jobs',ok:true},
-  {e:'🔁',n:'Regular',d:'3 repeat clients',ok:true},
-  {e:'🎓',n:'529 Saver',d:'Save $500 for college',ok:S.fund >= 500},
-  {e:'🚀',n:'50 Jobs',d:'Complete 50 jobs',ok:S.jobsDone >= 50}
+  {e:'confetti',n:'First Job',d:'Complete 1 job',ok:S.jobsDone >= 1},
+  {e:'trophy',n:'10 Jobs',d:'Complete 10 jobs',ok:S.jobsDone >= 10},
+  {e:'medal',n:'25 Jobs',d:'Complete 25 jobs',ok:S.jobsDone >= 25},
+  {e:'timer',n:'100 Hours',d:'Log 100 service hrs',ok:S.hours >= 100},
+  {e:'star',n:'Top Rated',d:'4.8+ over 20 reviews',ok:true},
+  {e:'snowflake',n:'Snow Hero',d:'5 snow jobs',ok:true},
+  {e:'repeat',n:'Regular',d:'3 repeat clients',ok:true},
+  {e:'piggy-bank',n:'529 Saver',d:'Save $500 for college',ok:S.fund >= 500},
+  {e:'rocket-launch',n:'50 Jobs',d:'Complete 50 jobs',ok:S.jobsDone >= 50}
 ];
 
 /* ---------- render ---------- */
@@ -169,8 +157,8 @@ function onboarding(){
       <p class="sub" style="margin-top:10px;font-size:15px">Students earn, save for college, and build a verified work history. Neighbors get affordable help they can trust.</p>
     </div>
     <div style="margin-top:28px">
-      <button class="role ${S._pick === 'homeowner' ? 'on' : ''}" data-act="pick" data-id="homeowner"><span class="e">🏡</span><div><b>I need help</b><span>Post jobs and hire vetted local students</span></div></button>
-      <button class="role ${S._pick === 'student' ? 'on' : ''}" data-act="pick" data-id="student"><span class="e">🎓</span><div><b>I want to work</b><span>Find jobs nearby and grow your 529</span></div></button>
+      <button class="role ${S._pick === 'homeowner' ? 'on' : ''}" data-act="pick" data-id="homeowner"><span class="e">${si('house-line')}</span><div><b>I need help</b><span>Post jobs and hire vetted local students</span></div></button>
+      <button class="role ${S._pick === 'student' ? 'on' : ''}" data-act="pick" data-id="student"><span class="e">${si('graduation-cap')}</span><div><b>I want to work</b><span>Find jobs nearby and grow your 529</span></div></button>
       <div class="field"><label for="nm">First name</label><input id="nm" data-bind="name" placeholder="${S._pick === 'homeowner' ? 'Sandra' : 'Joel'}" value="${esc(S.name)}" maxlength="20" autocomplete="off"></div>
       <button class="btn" style="margin-top:18px" data-act="start" ${S._pick ? '' : 'disabled'}>Continue</button>
       <p class="note" style="text-align:center">Interactive demo. No account needed, nothing is saved.</p>
@@ -182,12 +170,12 @@ function jobCard(j){
   const t = TYPES[j.type], ap = S.applied.includes(j.id);
   return `<div class="card job ${j.boost ? 'boost' : ''}" data-act="job" data-id="${j.id}">
     <div class="row">
-      <div class="ico">${t.e}</div>
+      <div class="ico">${si(t.e)}</div>
       <div style="flex:1;min-width:0">
         <div class="between"><h4>${esc(j.title)}</h4><span class="pay">${$0(j.pay)}</span></div>
-        <div class="meta">${esc(j.owner)} ${j.ov ? '✓' : ''} · ${j.dist} mi · ${esc(j.when)}</div>
+        <div class="meta">${esc(j.owner)} ${j.ov ? si('seal-check', 'ok') : ''} · ${j.dist} mi · ${esc(j.when)}</div>
         <div class="row" style="gap:6px;margin-top:8px">
-          ${j.boost ? '<span class="badge y">⚡ Boosted</span>' : ''}
+          ${j.boost ? `<span class="badge y">${si('lightning')} Boosted</span>` : ''}
           ${j.ov ? '<span class="badge b">Verified home</span>' : ''}
           ${ap ? '<span class="badge g">Applied</span>' : ''}
         </div>
@@ -206,10 +194,10 @@ function filteredJobs(){
 function sHome(){
   const up = S.sched.filter(s => s.status !== 'done').sort((a, b) => a.day - b.day);
   const near = S.jobs.filter(j => !S.applied.includes(j.id)).sort((a, b) => (b.boost - a.boost) || (a.dist - b.dist)).slice(0, 3);
-  return `<div class="hero-greet"><div><h1>Hey ${firstName()} 👋</h1><p class="sub">Goshen, IN · ${S.premium ? '<span style="color:var(--yellow)">Premium</span>' : 'Free plan'}</p></div>
+  return `<div class="hero-greet"><div><h1>Hey ${firstName()}</h1><p class="sub">Goshen, IN · ${S.premium ? '<span style="color:var(--yellow)">Premium</span>' : 'Free plan'}</p></div>
       <button data-act="avail" class="pill-live ${S.available ? '' : 'off'}" style="margin-top:8px">${S.available ? 'Available' : 'Away'}</button></div>
     <div class="card fund" data-act="tab" data-id="fund" style="cursor:pointer">
-      <div class="between"><span style="font-weight:700;font-size:13px">🎓 COLLEGE FUND · 529</span><span style="font-size:12px;font-weight:700">${S.pct}% of every job</span></div>
+      <div class="between"><span style="font-weight:700;font-size:13px">${si('graduation-cap')} COLLEGE FUND · 529</span><span style="font-size:12px;font-weight:700">${S.pct}% of every job</span></div>
       <div style="font-size:34px;font-weight:800;margin-top:6px;letter-spacing:-.02em">${$(S.fund)}</div>
       <div class="sub">${fundPctDone().toFixed(0)}% of your ${$0(S.fundGoal)} goal</div>
       <div class="bar"><i style="width:${fundPctDone()}%"></i></div>
@@ -218,7 +206,7 @@ function sHome(){
       <div class="stat" data-act="earnings" style="cursor:pointer"><b>${$0(S.earned)}</b><span>Earned · tap for breakdown</span></div>
       <div class="stat"><b>${S.jobsDone}</b><span>Jobs completed</span></div>
       <div class="stat"><b>${S.hours}</b><span>Verified service hours</span></div>
-      <div class="stat"><b>4.9 ★</b><span>38 reviews · 100% on-time</span></div>
+      <div class="stat"><b>4.9 ${si('star','y')}</b><span>38 reviews · 100% on-time</span></div>
     </div>
     <h2>Up next <a data-act="tab" data-id="sched">Schedule</a></h2>
     ${up.length ? up.slice(0,2).map(schedRow).join('') : '<div class="card empty">Nothing booked yet. Apply to a job below.</div>'}
@@ -226,7 +214,7 @@ function sHome(){
     ${near.map(jobCard).join('')}`;
 }
 function sJobs(){
-  const chips = [['all','All'],['lawn','Lawn'],['snow','Snow'],['car','Car Wash'],['yard','Yard'],['pet','Pets'],['clean','Cleaning'],['boost','⚡ Boosted']];
+  const chips = [['all','All'],['lawn','Lawn'],['snow','Snow'],['car','Car Wash'],['yard','Yard'],['pet','Pets'],['clean','Cleaning'],['boost','Boosted']];
   const js = filteredJobs(), active = S.jfilters.verified || S.jfilters.dist || S.jfilters.pay !== 'any';
   return `<div class="between"><h1>Find work</h1><button class="icon-btn" data-act="jfilters" aria-label="Filters">${ico('filter')}${active ? '<i class="dot"></i>' : ''}</button></div>
     <p class="sub">${js.length} jobs within 5 miles of Goshen</p>
@@ -239,7 +227,7 @@ function schedRow(s){
     ? (s.rated ? `<span class="badge">Rated</span>` : `<button class="btn sm" data-act="rate" data-id="${s.id}">Rate</button>`)
     : s.status === 'confirmed' ? `<button class="btn sm ghost" data-act="complete" data-id="${s.id}">Mark done</button>`
     : `<span class="badge y">Pending</span>`;
-  return `<div class="card"><div class="row"><div class="job"><div class="ico">${t.e}</div></div>
+  return `<div class="card"><div class="row"><div class="job"><div class="ico">${si(t.e)}</div></div>
     <div style="flex:1"><h4 style="font-size:15px">${esc(s.title)}</h4><div class="sub" style="font-size:12px">${esc(s.who)} · Nov ${s.day} · ${s.time}</div></div>
     <div style="text-align:right"><div class="pay" style="font-size:15px;margin-bottom:6px">${$0(s.pay)}</div>${right}</div></div></div>`;
 }
@@ -283,14 +271,14 @@ function sFund(){
     <h2>Recent deposits</h2>
     <div class="card">${S.fundLog.map(l => `<div class="list-item"><div class="t">${esc(l.j)}<small>${l.d}</small></div><b style="color:var(--green)">+${$(l.a)}</b></div>`).join('')}</div>
     <h2>Linked account</h2>
-    <div class="card"><div class="list-item"><div style="font-size:24px">🏦</div><div class="t">Indiana 529 plan<small>Linked with parent/guardian · demo</small></div><span class="badge g">Active</span></div>
-    <div class="list-item" data-act="toast" data-msg="Family members can now chip in too 🎓" style="cursor:pointer"><div style="font-size:24px">💌</div><div class="t">Invite family to contribute<small>Share a gift link for birthdays and holidays</small></div><span class="link">Share</span></div></div>`;
+    <div class="card"><div class="list-item"><div class="li-ico">${si('bank')}</div><div class="t">Indiana 529 plan<small>Linked with parent/guardian · demo</small></div><span class="badge g">Active</span></div>
+    <div class="list-item" data-act="toast" data-msg="Gift link copied. Family can chip in anytime." style="cursor:pointer"><div class="li-ico">${si('gift')}</div><div class="t">Invite family to contribute<small>Share a gift link for birthdays and holidays</small></div><span class="link">Share</span></div></div>`;
 }
 function sProfile(){
   const totalH = Object.values(S.portfolio).reduce((a, p) => a + p[1], 0);
   return `<div style="text-align:center;margin-top:6px"><div class="av lg" style="margin:0 auto;background:#F3EC6C">${esc(initials((S.name || 'Joel') + ' M'))}</div>
       <h1 style="margin-top:12px">${firstName()} M.</h1><p class="sub">Concord High School · Goshen, IN</p>
-      <div class="row" style="justify-content:center;gap:6px;margin-top:10px"><span class="badge g">✓ Vetted</span><span class="badge y">★ Top Rated</span>${S.premium ? '<span class="badge b">Premium</span>' : ''}</div></div>
+      <div class="row" style="justify-content:center;gap:6px;margin-top:10px"><span class="badge g">${si('seal-check')} Vetted</span><span class="badge y">${si('star')} Top Rated</span>${S.premium ? '<span class="badge b">Premium</span>' : ''}</div></div>
     <div class="grid3" style="margin-top:18px">
       <div class="stat" style="text-align:center"><b>4.9</b><span>Rating</span></div>
       <div class="stat" style="text-align:center"><b>${S.jobsDone}</b><span>Jobs</span></div>
@@ -298,15 +286,15 @@ function sProfile(){
     </div>
     ${S.premium ? '' : `<div class="card boost" style="margin-top:12px"><div class="between"><div><b>Go Premium · $6/mo</b><div class="sub" style="font-size:13px">Top of search, early access to boosted jobs.</div></div><button class="btn sm" data-act="premium">Try it</button></div></div>`}
     <h2>Verified portfolio <span class="badge">${totalH} hrs</span></h2>
-    <div class="card">${Object.entries(S.portfolio).map(([k, [j, h]]) => `<div class="list-item"><div style="font-size:22px">${TYPES[k].e}</div><div class="t">${TYPES[k].n}<small>${j} jobs · ${h} service hours</small></div><div style="width:80px"><div class="bar dark" style="margin:0"><i style="width:${h / totalH * 100 * 1.6}%"></i></div></div></div>`).join('')}
+    <div class="card">${Object.entries(S.portfolio).map(([k, [j, h]]) => `<div class="list-item"><div class="li-ico y">${si(TYPES[k].e)}</div><div class="t">${TYPES[k].n}<small>${j} jobs · ${h} service hours</small></div><div style="width:80px"><div class="bar dark" style="margin:0"><i style="width:${h / totalH * 100 * 1.6}%"></i></div></div></div>`).join('')}
       <p class="note">Every hour is logged and verified by STWRD. Export it for college apps, scholarships, or your first résumé.</p>
       <button class="btn ghost" style="margin-top:12px" data-act="exportHours">Download service-hours record</button></div>
     <h2>Badges</h2>
-    <div class="grid3">${earnedBadges().map(b => `<div class="card badge-tile ${b.ok ? '' : 'lock'}" style="margin:0"><div class="e">${b.e}</div><b>${b.n}</b><small>${b.d}</small></div>`).join('')}</div>
+    <div class="grid3">${earnedBadges().map(b => `<div class="card badge-tile ${b.ok ? '' : 'lock'}" style="margin:0"><div class="e">${si(b.e)}</div><b>${b.n}</b><small>${b.d}</small></div>`).join('')}</div>
     <h2>My services <a data-act="addService">+ Add</a></h2>
-    <div class="card">${S.services.map(s => `<div class="list-item"><div style="font-size:22px">${TYPES[s.type].e}</div><div class="t">${TYPES[s.type].n}<small>${esc(s.desc)}</small></div><b>${$0(s.rate)}/hr</b></div>`).join('')}</div>
+    <div class="card">${S.services.map(s => `<div class="list-item"><div class="li-ico y">${si(TYPES[s.type].e)}</div><div class="t">${TYPES[s.type].n}<small>${esc(s.desc)}</small></div><b>${$0(s.rate)}/hr</b></div>`).join('')}</div>
     <h2>Reviews</h2>
-    ${REVIEWS.map(r => `<div class="card"><div class="between"><b>${r.who}</b><span style="color:var(--yellow)">${'★'.repeat(r.s)}${'☆'.repeat(5 - r.s)}</span></div><p class="sub" style="margin-top:6px">${r.t}</p></div>`).join('')}`;
+    ${REVIEWS.map(r => `<div class="card"><div class="between"><b>${r.who}</b>${stars(r.s)}</div><p class="sub" style="margin-top:6px">${r.t}</p></div>`).join('')}`;
 }
 
 /* ----- homeowner screens ----- */
@@ -314,7 +302,7 @@ function hHome(){
   const active = S.my.filter(j => j.status === 'booked' || j.status === 'open').length;
   const apps = S.my.reduce((a, j) => a + (j.status === 'open' ? (j.applicants || []).length : 0), 0);
   const due = S.my.filter(j => j.status === 'done');
-  return `<div class="hero-greet"><div><h1>Hi ${firstName()} 👋</h1><p class="sub">South Bend, IN · <span style="color:var(--green)">ID verified</span></p></div></div>
+  return `<div class="hero-greet"><div><h1>Hi ${firstName()}</h1><p class="sub">South Bend, IN · <span style="color:var(--green)">ID verified</span></p></div></div>
     <button class="btn" data-act="post">${ico('plus')} Post a job</button>
     ${due.map(j => `<div class="card boost" style="margin-top:12px"><div class="between"><div><b>${esc(j.title)} is done</b><div class="sub" style="font-size:13px">${esc(W(j.worker).name)} is waiting on payment</div></div><button class="btn sm" data-act="pay" data-id="${j.id}">Pay & tip</button></div></div>`).join('')}
     <div class="grid2" style="margin-top:12px">
@@ -326,32 +314,32 @@ function hHome(){
     <h2>Upcoming</h2>
     ${S.my.filter(j => j.status === 'booked').map(j => myJobRow(j)).join('') || '<div class="card empty">No upcoming jobs.</div>'}
     <h2>Recent activity</h2>
-    <div class="card">${S.activity.map(a => `<div class="list-item"><div style="font-size:20px">${a.e}</div><div class="t">${a.t}<small>${a.w}</small></div>${a.repost ? '<button class="btn sm ghost" data-act="post">Repost</button>' : ''}</div>`).join('')}</div>
+    <div class="card">${S.activity.map(a => `<div class="list-item"><div class="li-ico">${si(a.e)}</div><div class="t">${a.t}<small>${a.w}</small></div>${a.repost ? '<button class="btn sm ghost" data-act="post">Repost</button>' : ''}</div>`).join('')}</div>
     <h2>Top helpers near you <a data-act="tab" data-id="find">See all</a></h2>
     ${WORKERS.slice(0, 2).map(workerCard).join('')}`;
 }
 function workerCard(w){
   return `<div class="card job" data-act="worker" data-id="${w.id}"><div class="row">${avatar(w.name, w.c)}
     <div style="flex:1;min-width:0"><div class="between"><h4>${w.name}</h4><span style="font-weight:700">${$0(w.rate)}<small style="color:var(--mute);font-weight:500">/hr</small></span></div>
-    <div class="meta">★ ${w.rating.toFixed(1)} (${w.reviews}) · ${w.jobs} jobs · ${w.dist} mi</div>
-    <div class="row" style="gap:6px;margin-top:8px;flex-wrap:wrap">${w.vetted ? '<span class="badge g">✓ Vetted</span>' : ''}${w.top ? '<span class="badge y">★ Top Rated</span>' : ''}${w.skills.map(s => `<span class="badge">${TYPES[s].s}</span>`).join('')}</div></div></div></div>`;
+    <div class="meta">${si('star','y')} ${w.rating.toFixed(1)} (${w.reviews}) · ${w.jobs} jobs · ${w.dist} mi</div>
+    <div class="row" style="gap:6px;margin-top:8px;flex-wrap:wrap">${w.vetted ? `<span class="badge g">${si('seal-check')} Vetted</span>` : ''}${w.top ? `<span class="badge y">${si('star')} Top Rated</span>` : ''}${w.skills.map(s => `<span class="badge">${TYPES[s].s}</span>`).join('')}</div></div></div></div>`;
 }
 function hFind(){
-  const chips = [['all','All'],['lawn','Lawn'],['snow','Snow'],['car','Car Wash'],['yard','Yard'],['clean','Cleaning'],['vetted','✓ Vetted only'],['top','★ Top Rated']];
+  const chips = [['all','All'],['lawn','Lawn'],['snow','Snow'],['car','Car Wash'],['yard','Yard'],['clean','Cleaning'],['vetted','Vetted only'],['top','Top Rated']];
   const f = S.wfilter;
   const ws = WORKERS.filter(w => f === 'all' || (f === 'vetted' ? w.vetted : f === 'top' ? w.top : w.skills.includes(f))).sort((a, b) => a.dist - b.dist);
   return `<h1>Find help</h1><p class="sub">${ws.length} students available near South Bend</p>
     <div class="chips" style="margin:14px 0">${chips.map(([id, l]) => `<button class="chip ${f === id ? 'on' : ''}" data-act="wfilter" data-id="${id}">${l}</button>`).join('')}</div>
-    <div class="card" style="margin-bottom:10px;cursor:pointer" data-act="book" data-id=""><div class="row"><div style="font-size:26px">✨</div><div style="flex:1"><b>Let STWRD match you</b><div class="sub" style="font-size:13px">Tell us the job, we’ll pick the best available student.</div></div><span class="link">Book</span></div></div>
+    <div class="card" style="margin-bottom:10px;cursor:pointer" data-act="book" data-id=""><div class="row"><div class="li-ico y">${si('sparkle')}</div><div style="flex:1"><b>Let STWRD match you</b><div class="sub" style="font-size:13px">Tell us the job, we’ll pick the best available student.</div></div><span class="link">Book</span></div></div>
     ${ws.map(workerCard).join('')}`;
 }
 function myJobRow(j){
   const t = TYPES[j.type], w = j.worker ? W(j.worker) : null;
   const status = {open:`<span class="badge y">${(j.applicants || []).length} applicants</span>`, booked:'<span class="badge g">Confirmed</span>', done:'<span class="badge b">Needs payment</span>', paid:'<span class="badge">Paid</span>'}[j.status];
   const act = j.status === 'open' ? 'applicants' : j.status === 'done' ? 'pay' : j.status === 'paid' && !j.rated ? 'hrate' : '';
-  return `<div class="card job" ${act ? `data-act="${act}" data-id="${j.id}"` : ''}><div class="row"><div class="ico">${t.e}</div>
+  return `<div class="card job" ${act ? `data-act="${act}" data-id="${j.id}"` : ''}><div class="row"><div class="ico">${si(t.e)}</div>
     <div style="flex:1;min-width:0"><div class="between"><h4>${esc(j.title)}</h4><span class="pay" style="font-size:15px">${$0(j.pay)}</span></div>
-    <div class="meta">${w ? esc(w.name) + ' · ' : ''}${esc(j.when)}</div><div class="row" style="gap:6px;margin-top:8px">${status}${j.boost ? '<span class="badge y">⚡ Boosted</span>' : ''}${j.status === 'paid' && !j.rated ? '<span class="link">Rate</span>' : ''}</div></div></div></div>`;
+    <div class="meta">${w ? esc(w.name) + ' · ' : ''}${esc(j.when)}</div><div class="row" style="gap:6px;margin-top:8px">${status}${j.boost ? `<span class="badge y">${si('lightning')} Boosted</span>` : ''}${j.status === 'paid' && !j.rated ? '<span class="link">Rate</span>' : ''}</div></div></div></div>`;
 }
 function hJobs(){
   const g = (label, fn) => { const l = S.my.filter(fn); return l.length ? `<h2>${label}</h2>${l.map(myJobRow).join('')}` : ''; };
@@ -361,7 +349,7 @@ function hJobs(){
 function hProfile(){
   return `<div style="text-align:center;margin-top:6px"><div class="av lg" style="margin:0 auto;background:#7cb7ff">${esc(initials((S.name || 'Sandra') + ' K'))}</div>
       <h1 style="margin-top:12px">${firstName()} K.</h1><p class="sub">South Bend, IN · Member since 2026</p>
-      <div class="row" style="justify-content:center;gap:6px;margin-top:10px"><span class="badge g">✓ ID Verified</span><span class="badge y">🏡 Trusted Host</span></div></div>
+      <div class="row" style="justify-content:center;gap:6px;margin-top:10px"><span class="badge g">${si('identification-card')} ID Verified</span><span class="badge y">${si('house-line')} Trusted Host</span></div></div>
     <div class="grid3" style="margin-top:18px">
       <div class="stat" style="text-align:center"><b>${S.my.length + 10}</b><span>Jobs posted</span></div>
       <div class="stat" style="text-align:center"><b>4.9</b><span>Host rating</span></div>
@@ -371,9 +359,9 @@ function hProfile(){
     <div class="card boost"><div class="between"><div><b>STWRD Access</b><div class="sub" style="font-size:13px">$10 every 3 months · renews Jan 10</div></div><span class="badge g">Active</span></div>
       <div class="sub" style="font-size:13px;margin-top:10px">Unlimited posts, worker contact info, and 1 free boost per month.</div></div>
     <h2>Your impact</h2>
-    <div class="card"><div class="row"><div style="font-size:30px">🎓</div><div><b style="font-size:20px">$58.50</b><div class="sub" style="font-size:13px">sent to local students’ college funds through your jobs</div></div></div></div>
+    <div class="card"><div class="row"><div class="li-ico y lg">${si('graduation-cap')}</div><div><b style="font-size:20px">$58.50</b><div class="sub" style="font-size:13px">sent to local students’ college funds through your jobs</div></div></div></div>
     <h2>What students say</h2>
-    <div class="card"><div class="between"><b>Joel M.</b><span style="color:var(--yellow)">★★★★★</span></div><p class="sub" style="margin-top:6px">Super clear instructions and always has the mower ready. Paid same day.</p></div>
+    <div class="card"><div class="between"><b>Joel M.</b>${stars(5)}</div><p class="sub" style="margin-top:6px">Super clear instructions and always has the mower ready. Paid same day.</p></div>
     <p class="note">Homeowners are reviewed too. Ratings go both ways so students know where they’re headed.</p>`;
 }
 
@@ -386,23 +374,23 @@ function drawSheet(){
   sheet.innerHTML = `<div class="grab"></div>${fn(S.sheet)}`;
   const c = sheet.querySelector('.chat'); if(c) c.scrollTop = c.scrollHeight;
 }
-const success = (title, msg, btn = 'Done', act = 'close') => `<div class="success"><div class="ring">✓</div><h3>${title}</h3><p class="sub">${msg}</p></div><button class="btn" data-act="${act}">${btn}</button>`;
+const success = (title, msg, btn = 'Done', act = 'close') => `<div class="success"><div class="ring">${si('check')}</div><h3>${title}</h3><p class="sub">${msg}</p></div><button class="btn" data-act="${act}">${btn}</button>`;
 
 const SHEETS = {
   job(d){
     const j = S.jobs.find(x => x.id === d.id), t = TYPES[j.type], ap = S.applied.includes(j.id), cut = j.pay * S.pct / 100;
-    return `<div class="row"><div class="job"><div class="ico">${t.e}</div></div><div><h3>${esc(j.title)}</h3><p class="sub">${t.n} · ${j.dist} mi away</p></div></div>
+    return `<div class="row"><div class="job"><div class="ico">${si(t.e)}</div></div><div><h3>${esc(j.title)}</h3><p class="sub">${t.n} · ${j.dist} mi away</p></div></div>
       <div class="grid3" style="margin-top:16px"><div class="stat"><b style="color:var(--yellow)">${$0(j.pay)}</b><span>Pay</span></div><div class="stat"><b style="font-size:15px">${esc(j.dur)}</b><span>Est. time</span></div><div class="stat"><b style="font-size:15px">${j.dist} mi</b><span>Distance</span></div></div>
       <div class="card" style="margin-top:10px"><div class="sub" style="font-size:12px;font-weight:700">WHEN</div><div style="margin-top:4px">${esc(j.when)}</div>
         <div class="sub" style="font-size:12px;font-weight:700;margin-top:12px">DETAILS</div><p style="margin-top:4px;font-size:14px;line-height:1.5">${esc(j.desc)}</p></div>
-      <div class="card" style="margin-top:10px"><div class="row">${avatar(j.owner, 1)}<div style="flex:1"><b>${esc(j.owner)}</b><div class="sub" style="font-size:12px">${j.ov ? '✓ Verified homeowner · ' : ''}★ 4.9 host rating</div></div></div></div>
-      <div class="card fund" style="margin-top:10px;padding:12px 16px"><div class="between"><span style="font-weight:700;font-size:14px">🎓 ${$(cut)} goes to your 529</span><span style="font-size:13px">${$(j.pay - cut)} to you</span></div></div>
-      <button class="btn" style="margin-top:14px" data-act="apply" data-id="${j.id}" ${ap ? 'disabled' : ''}>${ap ? `Applied ✓ · waiting on ${esc(j.owner)}` : 'Apply for this job'}</button>`;
+      <div class="card" style="margin-top:10px"><div class="row">${avatar(j.owner, 1)}<div style="flex:1"><b>${esc(j.owner)}</b><div class="sub" style="font-size:12px">${j.ov ? si('seal-check','ok') + ' Verified homeowner · ' : ''}${si('star','y')} 4.9 host rating</div></div></div></div>
+      <div class="card fund" style="margin-top:10px;padding:12px 16px"><div class="between"><span style="font-weight:700;font-size:14px">${si('graduation-cap')} ${$(cut)} goes to your 529</span><span style="font-size:13px">${$(j.pay - cut)} to you</span></div></div>
+      <button class="btn" style="margin-top:14px" data-act="apply" data-id="${j.id}" ${ap ? 'disabled' : ''}>${ap ? `${si('check-circle')} Applied · waiting on ${esc(j.owner)}` : 'Apply for this job'}</button>`;
   },
   jfilters(){
     const f = S.jfilters, c = (k, v, l) => `<button class="chip ${f[k] === v ? 'on' : ''}" data-act="jf" data-k="${k}" data-v="${v}">${l}</button>`;
     return `<h3>Filters</h3>
-      <div class="field"><label>Homeowner</label><div class="chips">${c('verified', false, 'Anyone')}${c('verified', true, '✓ Verified only')}</div></div>
+      <div class="field"><label>Homeowner</label><div class="chips">${c('verified', false, 'Anyone')}${c('verified', true, 'Verified only')}</div></div>
       <div class="field"><label>Distance</label><div class="chips">${c('dist', 0, 'Any')}${c('dist', 1, 'Within 1 mi')}${c('dist', 2, 'Within 2 mi')}</div></div>
       <div class="field"><label>Pay</label><div class="chips">${c('pay', 'any', 'Any')}${c('pay', 'low', 'Under $40')}${c('pay', 'mid', '$40–$80')}${c('pay', 'high', '$80+')}</div></div>
       <div class="grid2" style="margin-top:20px"><button class="btn ghost" data-act="jfreset">Reset all</button><button class="btn" data-act="close">Show ${filteredJobs().length} jobs</button></div>`;
@@ -411,7 +399,7 @@ const SHEETS = {
     const name = d.who;
     if(d.done) return success('Thanks for the feedback', `Your review helps keep STWRD trustworthy for everyone.`);
     return `<h3 style="text-align:center">Rate ${esc(name)}</h3><p class="sub" style="text-align:center">${esc(d.title || '')}</p>
-      <div class="stars">${[1,2,3,4,5].map(i => `<button class="${i <= (d.stars || 0) ? 'on' : ''}" data-act="star" data-id="${i}" aria-label="${i} stars">★</button>`).join('')}</div>
+      <div class="stars">${[1,2,3,4,5].map(i => `<button class="${i <= (d.stars || 0) ? 'on' : ''}" data-act="star" data-id="${i}" aria-label="${i} stars">${si('star')}</button>`).join('')}</div>
       <div class="chips" style="justify-content:center;flex-wrap:wrap">${['On time','Friendly','Clear instructions','Great work','Would rehire'].map(t => `<button class="chip ${(d.tags || []).includes(t) ? 'on' : ''}" data-act="tag" data-id="${t}">${t}</button>`).join('')}</div>
       <button class="btn" style="margin-top:18px" data-act="submitRate" ${d.stars ? '' : 'disabled'}>Submit rating</button>`;
   },
@@ -437,7 +425,7 @@ const SHEETS = {
   addService(d){
     if(d.done) return success('Service added', 'It’s now on your profile and in homeowner search.');
     return `<h3>Add a service</h3>
-      <div class="field"><label>Type</label><div class="opt-grid">${Object.entries(TYPES).map(([k, t]) => `<button class="opt ${d.type === k ? 'on' : ''}" data-act="svcType" data-id="${k}"><b>${t.e}</b>${t.s}</button>`).join('')}</div></div>
+      <div class="field"><label>Type</label><div class="opt-grid">${Object.entries(TYPES).map(([k, t]) => `<button class="opt ${d.type === k ? 'on' : ''}" data-act="svcType" data-id="${k}"><b>${si(t.e)}</b>${t.s}</button>`).join('')}</div></div>
       <div class="field"><label>Your rate ($/hr)</label><input type="number" min="10" max="60" data-bind="sheet.rate" value="${esc(d.rate || 18)}"></div>
       <div class="field"><label>Short description</label><input data-bind="sheet.desc" maxlength="60" placeholder="What’s included?" value="${esc(d.desc || '')}"></div>
       <button class="btn" style="margin-top:18px" data-act="saveService" ${d.type ? '' : 'disabled'}>Save service</button>`;
@@ -446,7 +434,7 @@ const SHEETS = {
     if(d.done) return success('You’re Premium', 'You’ll show first in homeowner search starting now.');
     return `<h3>STWRD Premium</h3><p class="sub">For students who want more jobs, faster.</p>
       <div class="card fund" style="margin-top:14px;text-align:center"><div style="font-size:40px;font-weight:800">$6<span style="font-size:16px">/month</span></div><div class="sub">Cancel anytime</div></div>
-      <div class="card" style="margin-top:10px">${['Show first in homeowner search','Early access to boosted jobs','Premium badge on your profile','Unlimited service listings'].map(f => `<div class="list-item"><span style="color:var(--green)">${ico('check').replace('<svg', '<svg width="18" height="18"')}</span><div class="t">${f}</div></div>`).join('')}</div>
+      <div class="card" style="margin-top:10px">${['Show first in homeowner search','Early access to boosted jobs','Premium badge on your profile','Unlimited service listings'].map(f => `<div class="list-item"><span class="li-ico y">${si('check-circle')}</span><div class="t">${f}</div></div>`).join('')}</div>
       <button class="btn" style="margin-top:14px" data-act="goPremium">Start Premium (demo)</button>`;
   },
   notes(){
@@ -457,24 +445,24 @@ const SHEETS = {
   settings(){
     const other = student() ? 'homeowner' : 'student';
     const items = student()
-      ? [['✏️','Edit profile','toast','Profile editing is coming soon'],['📅','Set availability','avail'],['💳','Payment & payouts','toast','Payouts land in 1 business day'],['🎓','529 settings','gofund'],['⭐','Premium','premium']]
-      : [['✏️','Edit profile','toast','Profile editing is coming soon'],['💳','Payment methods','toast','Visa ending 4417 is your default (demo)'],['🏡','Membership','toast','STWRD Access: active']];
+      ? [['pencil-simple','Edit profile','toast','Profile editing is coming soon'],['calendar-check','Set availability','avail'],['credit-card','Payment & payouts','toast','Payouts land in 1 business day'],['graduation-cap','529 settings','gofund'],['star','Premium','premium']]
+      : [['pencil-simple','Edit profile','toast','Profile editing is coming soon'],['credit-card','Payment methods','toast','Visa ending 4417 is your default (demo)'],['house-line','Membership','toast','STWRD Access: active']];
     return `<h3>Settings</h3><div style="margin-top:8px">
-      ${items.map(([e, l, a, m]) => `<div class="list-item" data-act="${a}" ${m ? `data-msg="${m}"` : ''} style="cursor:pointer"><div style="font-size:20px">${e}</div><div class="t">${l}</div><span class="sub">›</span></div>`).join('')}
-      <div class="list-item" data-act="toast" data-msg="Help is a message away: help@stwrd.net" style="cursor:pointer"><div style="font-size:20px">💬</div><div class="t">Help & support</div><span class="sub">›</span></div>
-      <div class="list-item" data-act="switch" data-id="${other}" style="cursor:pointer"><div style="font-size:20px">🔄</div><div class="t">Switch to ${other} view<small>See the other side of the marketplace</small></div><span class="sub">›</span></div>
-      <div class="list-item" data-act="signout" style="cursor:pointer"><div style="font-size:20px">🚪</div><div class="t" style="color:var(--red)">Sign out &amp; restart demo</div></div></div>`;
+      ${items.map(([e, l, a, m]) => `<div class="list-item" data-act="${a}" ${m ? `data-msg="${m}"` : ''} style="cursor:pointer"><div class="li-ico">${si(e)}</div><div class="t">${l}</div><span class="sub">${si('caret-right')}</span></div>`).join('')}
+      <div class="list-item" data-act="toast" data-msg="Help is a message away: help@stwrd.net" style="cursor:pointer"><div class="li-ico">${si('chat-circle-dots')}</div><div class="t">Help & support</div><span class="sub">${si('caret-right')}</span></div>
+      <div class="list-item" data-act="switch" data-id="${other}" style="cursor:pointer"><div class="li-ico">${si('arrows-clockwise')}</div><div class="t">Switch to ${other} view<small>See the other side of the marketplace</small></div><span class="sub">${si('caret-right')}</span></div>
+      <div class="list-item" data-act="signout" style="cursor:pointer"><div class="li-ico" style="color:var(--red)">${si('sign-out')}</div><div class="t" style="color:var(--red)">Sign out &amp; restart demo</div></div></div>`;
   },
   worker(d){
     const w = W(d.id), tab = d.tab || 'stats';
     const tabs = ['stats','about','services','reviews'].map(t => `<button class="${tab === t ? 'on' : ''}" data-act="wtab" data-id="${t}">${t[0].toUpperCase() + t.slice(1)}</button>`).join('');
     const body = {
-      stats:`<div class="grid2"><div class="stat"><b>${w.rating.toFixed(1)} ★</b><span>${w.reviews} reviews</span></div><div class="stat"><b>${w.jobs}</b><span>Jobs done</span></div><div class="stat"><b>${w.hours}</b><span>Verified hours</span></div><div class="stat"><b>100%</b><span>On-time</span></div></div>`,
-      about:`<div class="card"><p style="font-size:14px;line-height:1.55">${w.about}</p><div class="list-item" style="margin-top:8px"><div class="t">School<small>${w.school}</small></div></div><div class="list-item"><div class="t">Background check<small>${w.vetted ? 'Passed · parent/guardian consent on file' : 'In progress'}</small></div>${w.vetted ? '<span class="badge g">✓</span>' : '<span class="badge">…</span>'}</div></div>`,
-      services:`<div class="card">${w.skills.map(s => `<div class="list-item"><div style="font-size:22px">${TYPES[s].e}</div><div class="t">${TYPES[s].n}</div><b>${$0(w.rate)}/hr</b></div>`).join('')}</div>`,
-      reviews:REVIEWS.map(r => `<div class="card"><div class="between"><b>${r.who}</b><span style="color:var(--yellow)">${'★'.repeat(r.s)}</span></div><p class="sub" style="margin-top:6px">${r.t}</p></div>`).join('')
+      stats:`<div class="grid2"><div class="stat"><b>${w.rating.toFixed(1)} ${si('star','y')}</b><span>${w.reviews} reviews</span></div><div class="stat"><b>${w.jobs}</b><span>Jobs done</span></div><div class="stat"><b>${w.hours}</b><span>Verified hours</span></div><div class="stat"><b>100%</b><span>On-time</span></div></div>`,
+      about:`<div class="card"><p style="font-size:14px;line-height:1.55">${w.about}</p><div class="list-item" style="margin-top:8px"><div class="t">School<small>${w.school}</small></div></div><div class="list-item"><div class="t">Background check<small>${w.vetted ? 'Passed · parent/guardian consent on file' : 'In progress'}</small></div>${w.vetted ? `<span class="badge g">${si('shield-check')}</span>` : `<span class="badge">${si('clock-countdown')}</span>`}</div></div>`,
+      services:`<div class="card">${w.skills.map(s => `<div class="list-item"><div class="li-ico y">${si(TYPES[s].e)}</div><div class="t">${TYPES[s].n}</div><b>${$0(w.rate)}/hr</b></div>`).join('')}</div>`,
+      reviews:REVIEWS.map(r => `<div class="card"><div class="between"><b>${r.who}</b>${stars(r.s)}</div><p class="sub" style="margin-top:6px">${r.t}</p></div>`).join('')
     }[tab];
-    return `<div class="row">${avatar(w.name, w.c, 'lg')}<div><h3>${w.name}</h3><p class="sub">${w.school} · ${w.dist} mi</p><div class="row" style="gap:6px;margin-top:6px">${w.vetted ? '<span class="badge g">✓ Vetted</span>' : ''}${w.top ? '<span class="badge y">★ Top Rated</span>' : ''}</div></div></div>
+    return `<div class="row">${avatar(w.name, w.c, 'lg')}<div><h3>${w.name}</h3><p class="sub">${w.school} · ${w.dist} mi</p><div class="row" style="gap:6px;margin-top:6px">${w.vetted ? `<span class="badge g">${si('seal-check')} Vetted</span>` : ''}${w.top ? `<span class="badge y">${si('star')} Top Rated</span>` : ''}</div></div></div>
       <div class="seg" style="margin:16px 0 12px">${tabs}</div>${body}
       <div class="grid2" style="margin-top:14px"><button class="btn ghost" data-act="contact" data-id="${w.id}">Message</button><button class="btn" data-act="book" data-id="${w.id}">Book ${w.name.split(' ')[0]}</button></div>`;
   },
@@ -487,7 +475,7 @@ const SHEETS = {
       return success('Booking confirmed', `${who} will see you Nov ${d.day} at ${d.time}. ${w ? '' : 'STWRD matched you with the top-rated student nearby.'}`, 'View my jobs', 'toMyJobs');
     }
     if(step === 1) return `${dots}<h3>What do you need?</h3><p class="sub">${w ? 'Services ' + w.name + ' offers' : 'Pick a job type'}</p>
-      <div class="opt-grid" style="margin-top:14px">${types.map(k => `<button class="opt ${d.service === k ? 'on' : ''}" data-act="bk" data-k="service" data-v="${k}"><b>${TYPES[k].e}</b>${TYPES[k].s}</button>`).join('')}</div>
+      <div class="opt-grid" style="margin-top:14px">${types.map(k => `<button class="opt ${d.service === k ? 'on' : ''}" data-act="bk" data-k="service" data-v="${k}"><b>${si(TYPES[k].e)}</b>${TYPES[k].s}</button>`).join('')}</div>
       <button class="btn" style="margin-top:18px" data-act="bkNext" ${d.service ? '' : 'disabled'}>Next</button>`;
     if(step === 2) return `${dots}<h3>When?</h3><p class="sub">November 2026</p>
       <div class="card" style="margin-top:12px">${calendar([], d.day, 'bkDay', 11)}</div>
@@ -497,32 +485,32 @@ const SHEETS = {
       <div class="grid2" style="margin-top:18px"><button class="btn ghost" data-act="bkBack">Back</button><button class="btn" data-act="bkNext" ${d.day && d.time && d.dur ? '' : 'disabled'}>Next</button></div>`;
     const rate = w ? w.rate : 18, est = rate * Number(d.dur);
     return `${dots}<h3>Who & notes</h3>
-      <div class="card" style="margin-top:12px">${w ? `<div class="row">${avatar(w.name, w.c)}<div><b>${w.name}</b><div class="sub" style="font-size:12px">★ ${w.rating} · ${$0(w.rate)}/hr</div></div></div>` : `<div class="row"><div style="font-size:26px">✨</div><div><b>STWRD will match you</b><div class="sub" style="font-size:12px">We’ll pick a vetted, top-rated student who’s free</div></div></div>`}</div>
+      <div class="card" style="margin-top:12px">${w ? `<div class="row">${avatar(w.name, w.c)}<div><b>${w.name}</b><div class="sub" style="font-size:12px">${si('star','y')} ${w.rating} · ${$0(w.rate)}/hr</div></div></div>` : `<div class="row"><div class="li-ico y">${si('sparkle')}</div><div><b>STWRD will match you</b><div class="sub" style="font-size:12px">We’ll pick a vetted, top-rated student who’s free</div></div></div>`}</div>
       <div class="field"><label>Notes for your helper</label><textarea data-bind="sheet.notes" placeholder="Gate code, where supplies are, pets at home…">${esc(d.notes || '')}</textarea></div>
       <div class="card" style="margin-top:12px">
         <div class="list-item"><div class="t">${TYPES[d.service].n}<small>Nov ${d.day} · ${d.time} · ${d.dur === '4' ? 'Half day' : d.dur + ' hr'}</small></div><b>${$0(est)}</b></div>
-        <div class="list-item"><div class="t">To student’s 529<small>Included, at no extra cost to you</small></div><span style="color:var(--green);font-weight:700">🎓 ${$(est * 0.1)}</span></div></div>
+        <div class="list-item"><div class="t">To student’s 529<small>Included, at no extra cost to you</small></div><span style="color:var(--green);font-weight:700">${si('graduation-cap')} ${$(est * 0.1)}</span></div></div>
       <div class="grid2" style="margin-top:18px"><button class="btn ghost" data-act="bkBack">Back</button><button class="btn" data-act="bkConfirm">Confirm · ${$0(est)}</button></div>`;
   },
   post(d){
     if(d.done) return success('Job posted', `${d.boost ? 'Boosted: students nearby see it first. ' : ''}You’ll get a notification when someone applies.`, 'View my jobs', 'toMyJobs');
     return `<h3>Post a job</h3><p class="sub">Vetted students near you will see it right away.</p>
-      <div class="field"><label>Job type</label><div class="opt-grid">${Object.entries(TYPES).map(([k, t]) => `<button class="opt ${d.type === k ? 'on' : ''}" data-act="pk" data-k="type" data-v="${k}"><b>${t.e}</b>${t.s}</button>`).join('')}</div></div>
+      <div class="field"><label>Job type</label><div class="opt-grid">${Object.entries(TYPES).map(([k, t]) => `<button class="opt ${d.type === k ? 'on' : ''}" data-act="pk" data-k="type" data-v="${k}"><b>${si(t.e)}</b>${t.s}</button>`).join('')}</div></div>
       <div class="field"><label>Title</label><input data-bind="sheet.title" maxlength="50" placeholder="e.g. Rake front yard leaves" value="${esc(d.title || '')}"></div>
-      <div class="field"><div class="between"><label style="margin:0">Description</label><span class="link" data-act="aiDesc">✨ Write with AI</span></div><textarea data-bind="sheet.desc" style="margin-top:6px" placeholder="What needs doing, tools provided, timing…">${esc(d.desc || '')}</textarea></div>
+      <div class="field"><div class="between"><label style="margin:0">Description</label><span class="link" data-act="aiDesc">${si('sparkle')} Write with AI</span></div><textarea data-bind="sheet.desc" style="margin-top:6px" placeholder="What needs doing, tools provided, timing…">${esc(d.desc || '')}</textarea></div>
       <div class="field"><label>Pay</label><input type="number" min="10" data-bind="sheet.pay" placeholder="40" value="${esc(d.pay || '')}">${d.type ? `<p class="note" style="margin-top:6px">Typical for ${TYPES[d.type].s.toLowerCase()} nearby: ${{lawn:'$30–$45',snow:'$25–$55',car:'$35–$50',yard:'$50–$90',clean:'$40–$90',pet:'$15–$25 per walk',other:'$20/hr'}[d.type]}</p>` : ''}</div>
-      <div class="card boost" style="margin-top:14px"><div class="between"><div><b>⚡ Boost listing · $2.99</b><div class="sub" style="font-size:13px">Shown first to students nearby</div></div><button class="toggle ${d.boost ? 'on' : ''}" data-act="pboost" aria-label="Boost"></button></div></div>
+      <div class="card boost" style="margin-top:14px"><div class="between"><div><b>${si('lightning')} Boost listing · $2.99</b><div class="sub" style="font-size:13px">Shown first to students nearby</div></div><button class="toggle ${d.boost ? 'on' : ''}" data-act="pboost" aria-label="Boost"></button></div></div>
       <button class="btn" style="margin-top:16px" data-act="submitPost" ${d.type ? '' : 'disabled'}>Post job${d.boost ? ' · $2.99' : ''}</button>`;
   },
   applicants(d){
     const j = S.my.find(x => x.id === d.id);
     return `<h3>${esc(j.title)}</h3><p class="sub">${(j.applicants || []).length} students applied · ${$0(j.pay)}</p>
-      <div style="margin-top:12px">${(j.applicants || []).map(id => { const w = W(id); return `<div class="card"><div class="row">${avatar(w.name, w.c)}<div style="flex:1"><b>${w.name}</b><div class="sub" style="font-size:12px">★ ${w.rating} · ${w.jobs} jobs · ${w.dist} mi ${w.vetted ? '· ✓ Vetted' : ''}</div></div></div>
+      <div style="margin-top:12px">${(j.applicants || []).map(id => { const w = W(id); return `<div class="card"><div class="row">${avatar(w.name, w.c)}<div style="flex:1"><b>${w.name}</b><div class="sub" style="font-size:12px">${si('star','y')} ${w.rating} · ${w.jobs} jobs · ${w.dist} mi ${w.vetted ? '· ' + si('seal-check','ok') + ' Vetted' : ''}</div></div></div>
         <div class="grid2" style="margin-top:12px"><button class="btn sm ghost" data-act="worker" data-id="${w.id}">Profile</button><button class="btn sm" data-act="accept" data-id="${j.id}" data-w="${w.id}">Hire</button></div></div>`; }).join('')}</div>`;
   },
   pay(d){
     const j = S.my.find(x => x.id === d.id), w = W(j.worker), tip = d.tip ?? 5, total = j.pay + tip;
-    if(d.done) return success('Paid', `${w.name} got ${$(total)}. ${d.to529 && tip ? `Your ${$0(tip)} tip went to their college fund. 🎓` : ''}`, 'Rate ' + w.name.split(' ')[0], 'hrate');
+    if(d.done) return success('Paid', `${w.name} got ${$(total)}. ${d.to529 && tip ? `Your ${$0(tip)} tip went to their college fund.` : ''}`, 'Rate ' + w.name.split(' ')[0], 'hrate');
     return `<h3>Pay ${w.name}</h3><p class="sub">${esc(j.title)} · ${esc(j.when)}</p>
       <div class="field"><label>Add a tip</label><div class="chips">${[0,5,10,15].map(t => `<button class="chip ${tip === t ? 'on' : ''}" data-act="tip" data-id="${t}">${t ? '$' + t : 'No tip'}</button>`).join('')}</div></div>
       <div class="list-item" style="margin-top:10px"><div class="t"><b>Send tip to their 529</b><small>Help ${w.name.split(' ')[0]} save for college</small></div><button class="toggle ${d.to529 ? 'on' : ''}" data-act="to529" aria-label="Send tip to 529"></button></div>
@@ -533,7 +521,7 @@ const SHEETS = {
     const quick = student()
       ? ['What should I charge to mow?','How does the 529 work?','Find me jobs this weekend','How do I get Top Rated?']
       : ['What should I pay for leaf cleanup?','Write a job post for me','Who’s best for snow removal?','Are workers background checked?'];
-    return `<div class="between"><h3>✨ STWRD Assistant</h3><span class="badge g">AI</span></div>
+    return `<div class="between"><h3 class="row" style="gap:8px"><span style="color:var(--yellow);display:flex">${si('sparkle')}</span>STWRD Assistant</h3><span class="badge g">AI</span></div>
       <div class="chat" id="chat">${S.chat.map(m => `<div class="msg ${m.from}">${m.typing ? '<div class="typing"><i></i><i></i><i></i></div>' : m.text}</div>`).join('')}</div>
       <div class="chips" style="flex-wrap:wrap;margin-bottom:10px">${quick.map(q => `<button class="chip" data-act="ask" data-q="${esc(q)}">${esc(q)}</button>`).join('')}</div>
       <form class="row" data-form="chat" style="gap:8px"><input id="chatin" placeholder="Ask anything…" autocomplete="off"><button class="icon-btn" style="background:var(--yellow);color:var(--navy);flex-shrink:0" aria-label="Send">${ico('send')}</button></form>`;
@@ -552,10 +540,10 @@ function reply(q){
     return student() ? `Students nearby charge <b>$16–$20/hr</b> for mowing. With your 4.9 rating and 42 jobs, <b>$18–$20/hr</b> is fair. Most mows take 1–1.5 hrs, so about <b>$30–$35</b> per yard.` : `Most small jobs land between <b>$15–$20/hr</b>. Mowing averages $30–$45, car washes $35–$50, and yard cleanups $50–$90.`;
   }
   if(/write|post|description/.test(s)) return `Here’s a draft:<br><br><i>“Looking for a reliable student to rake and bag leaves in my front and back yard this Saturday morning. Rakes and bags provided. About 3 hours. $70, paid same day.”</i><br><br>Tap <b>Post</b> and hit “Write with AI” to drop this in.`;
-  if(/find|weekend|near|jobs/.test(s)) return student() ? `This weekend near you: <b>Fall leaf cleanup</b> ($70, 1.2 mi, boosted), <b>Weekly lawn mowing</b> ($35, 0.4 mi), and a <b>car wash</b> ($40, 0.8 mi). Want me to filter to just these?` : `Top picks near you: <b>Joel M.</b> (4.9★, lawn + snow) and <b>Owen B.</b> (4.8★, car + yard). Both vetted.`;
-  if(/best|who|snow|recommend/.test(s)) return `For snow, I’d go with <b>Joel M.</b>: 4.9★, 0.4 mi away, and he holds the Snow Hero badge. <b>Simon A.</b> is a solid backup for early mornings.`;
-  if(/safe|background|check|vetted|trust/.test(s)) return `Students marked <b>✓ Vetted</b> passed a background check, and anyone under 18 has parent or guardian consent on file. Homeowners verify their ID, and both sides leave reviews after every job.`;
-  if(/top rated|badge|rating/.test(s)) return `Top Rated means 4.8★+ across 20+ reviews. Show up on time, message before you arrive, and send a quick photo when you finish. Those three things drive most 5-star reviews.`;
+  if(/find|weekend|near|jobs/.test(s)) return student() ? `This weekend near you: <b>Fall leaf cleanup</b> ($70, 1.2 mi, boosted), <b>Weekly lawn mowing</b> ($35, 0.4 mi), and a <b>car wash</b> ($40, 0.8 mi). Want me to filter to just these?` : `Top picks near you: <b>Joel M.</b> (4.9 stars, lawn + snow) and <b>Owen B.</b> (4.8 stars, car + yard). Both vetted.`;
+  if(/best|who|snow|recommend/.test(s)) return `For snow, I’d go with <b>Joel M.</b>: 4.9 stars, 0.4 mi away, and he holds the Snow Hero badge. <b>Simon A.</b> is a solid backup for early mornings.`;
+  if(/safe|background|check|vetted|trust/.test(s)) return `Students marked <b>Vetted</b> passed a background check, and anyone under 18 has parent or guardian consent on file. Homeowners verify their ID, and both sides leave reviews after every job.`;
+  if(/top rated|badge|rating/.test(s)) return `Top Rated means 4.8+ stars across 20+ reviews. Show up on time, message before you arrive, and send a quick photo when you finish. Those three things drive most 5-star reviews.`;
   return `I can help with pricing, writing job posts, finding ${student() ? 'jobs' : 'helpers'}, or how the 529 works. What do you need?`;
 }
 function ask(q){
@@ -580,7 +568,7 @@ function completeJob(id){
   S.byService[s.type] = (S.byService[s.type] || 0) + s.pay;
   if(S.portfolio[s.type]){ S.portfolio[s.type][0]++; S.portfolio[s.type][1] += 2; }
   S.fundLog.unshift({d:'Nov 10', j:`${s.title} · ${s.who}`, a:cut});
-  toast(`+${$0(s.pay)} earned · 🎓 ${$(cut)} to your 529`);
+  toast(`+${$0(s.pay)} earned · ${si('graduation-cap')} ${$(cut)} to your 529`);
   render();
   setTimeout(() => openSheet('rate', {who:s.who, title:s.title, sid:id}), 900);
 }
@@ -643,7 +631,7 @@ const A = {
   bkConfirm:() => {
     const d = S.sheet, w = d.worker || 'joel', est = (d.worker ? W(d.worker).rate : 18) * Number(d.dur);
     S.my.unshift({id:Date.now(), type:d.service, title:TYPES[d.service].n, pay:est, status:'booked', worker:w, when:`Nov ${d.day} · ${d.time}`});
-    S.activity.unshift({e:'📅', t:`You booked <b>${W(w).name}</b> for ${TYPES[d.service].n.toLowerCase()}`, w:'just now'});
+    S.activity.unshift({e:'calendar-check', t:`You booked <b>${W(w).name}</b> for ${TYPES[d.service].n.toLowerCase()}`, w:'just now'});
     d.done = true; drawSheet(); render();
   },
   toMyJobs:() => { closeSheet(); S.tab = 'myjobs'; render(); },
@@ -654,15 +642,15 @@ const A = {
     const d = S.sheet, t = d.type || 'yard';
     const drafts = {lawn:'Need a reliable student to mow, edge, and bag clippings for my front and back yard. Mower and trimmer provided. About 1.5 hours. Paid same day.', snow:'Looking for someone to shovel my two-car driveway and front walk after the next snowfall, ideally before 7 AM. Shovel and salt provided.', car:'Hand wash and interior vacuum for one SUV. Hose, buckets, and supplies are in the garage. About 2 hours.', yard:'Rake and bag leaves in my front and back yard plus flower beds. Rakes and bags provided. About 3 hours this Saturday morning.', clean:'Help sorting and sweeping out my garage and carrying boxes to the curb. Some lifting. About 3–4 hours.', pet:'Walk my friendly golden retriever for 30 minutes after school, three days this week. Leash and treats by the door.', other:'Quick help around the house. Details on arrival. About 2 hours, paid same day.'};
     d.desc = drafts[t]; if(!d.title) d.title = {lawn:'Mow front + back yard', snow:'Shovel driveway after snow', car:'Wash + vacuum my SUV', yard:'Rake and bag leaves', clean:'Garage clean-out', pet:'Dog walks after school', other:'Help around the house'}[t]; if(!d.type) d.type = t;
-    drawSheet(); toast('✨ Drafted by STWRD AI');
+    drawSheet(); toast(`${si('sparkle')} Drafted by STWRD AI`);
   },
   submitPost:() => {
     const d = S.sheet, pay = +d.pay || 40, title = d.title || TYPES[d.type].n;
     S.my.unshift({id:Date.now(), type:d.type, title, pay, status:'open', applicants:[], boost:!!d.boost, when:'Flexible'});
-    S.activity.unshift({e:'📣', t:`You posted <b>${esc(title)}</b>${d.boost ? ' (boosted)' : ''}`, w:'just now'});
+    S.activity.unshift({e:'megaphone', t:`You posted <b>${esc(title)}</b>${d.boost ? ' (boosted)' : ''}`, w:'just now'});
     d.done = true; drawSheet(); render();
     const job = S.my[0];
-    setTimeout(() => { job.applicants.push('joel'); S.unread = true; S.notes.homeowner.unshift({t:`Joel M. applied to ${esc(title)}.`, w:'1m'}); render(); toast(`🙋 Joel M. applied to ${esc(title)}`); }, 3500);
+    setTimeout(() => { job.applicants.push('joel'); S.unread = true; S.notes.homeowner.unshift({t:`Joel M. applied to ${esc(title)}.`, w:'1m'}); render(); toast(`${si('user-plus')} Joel M. applied to ${esc(title)}`); }, 3500);
   },
   applicants:e => openSheet('applicants', {id:+e.dataset.id}),
   accept:e => { const j = S.my.find(x => x.id === +e.dataset.id), w = W(e.dataset.w); j.status = 'booked'; j.worker = w.id; if(j.when === 'Flexible') j.when = 'Sat, Nov 21 · 9 AM'; closeSheet(); render(); toast(`${w.name} is hired. We’ll remind you both the day before.`); },
